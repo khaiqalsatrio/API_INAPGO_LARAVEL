@@ -7,26 +7,22 @@ use Illuminate\Http\Request;
 use App\Models\KamarHotel;
 use App\Models\Hotel;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreKamarRequest;
+use App\Http\Requests\UpdateKamarRequest;
+
 
 class KamarHotelController extends Controller
 {
-    public function store(Request $request)
+    public function store(StoreKamarRequest $request)
     {
-        $user = $request->get('auth_user'); 
+        $user = $request->get('auth_user');
         if (!$user || $user->role !== 'admin') {
             return response()->json([
                 'status' => false,
                 'message' => 'Hanya admin yang bisa menambahkan kamar.'
             ], 403);
         }
-        $request->validate([
-            'nama_kamar' => 'required|string',
-            'harga' => 'required|numeric',
-            'stok_kamar' => 'required|integer',
-            'deskripsi_kamar' => 'required|string',
-        ]);
-        // Cari hotel berdasarkan user admin
-        $hotel = Hotel::where('id_user', $user->id)->first(); 
+        $hotel = Hotel::where('id_user', $user->id)->first();
         if (!$hotel) {
             return response()->json([
                 'status' => false,
@@ -48,9 +44,41 @@ class KamarHotelController extends Controller
         ]);
     }
 
+    // UPDATE DATA KAMAR
+    public function update(UpdateKamarRequest $request, $id)
+    {
+        $user = $request->get('auth_user');
+        if (!$user || $user->role !== 'admin') {
+            return response()->json([
+                'status' => false,
+                'message' => 'Hanya admin yang bisa mengupdate kamar.'
+            ], 403);
+        }
+        $kamar = KamarHotel::where('id', $id)
+            ->where('id_user', $user->id)
+            ->first();
+        if (!$kamar) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Kamar tidak ditemukan atau bukan milik admin ini.'
+            ], 404);
+        }
+        $kamar->update($request->only([
+            'nama_kamar',
+            'harga',
+            'stok_kamar',
+            'deskripsi_kamar',
+        ]));
+        return response()->json([
+            'status' => true,
+            'message' => 'Kamar berhasil diperbarui.',
+            'data' => $kamar
+        ]);
+    }
+
     public function index(Request $request)
     {
-        $user = $request->get('auth_user'); 
+        $user = $request->get('auth_user');
         if (!$user || $user->role !== 'admin') {
             return response()->json([
                 'status' => false,
@@ -89,44 +117,6 @@ class KamarHotelController extends Controller
         ]);
     }
 
-    // UPDATE DATA KAMAR
-    public function update(Request $request, $id)
-    {
-        $user = $request->get('auth_user');
-        if (!$user || $user->role !== 'admin') {
-            return response()->json([
-                'status' => false,
-                'message' => 'Hanya admin yang bisa mengupdate kamar.'
-            ], 403);
-        }
-        $kamar = KamarHotel::where('id', $id)
-            ->where('id_user', $user->id)
-            ->first();
-        if (!$kamar) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Kamar tidak ditemukan atau bukan milik admin ini.'
-            ], 404);
-        }
-        $request->validate([
-            'nama_kamar' => 'sometimes|required|string',
-            'harga' => 'sometimes|required|numeric',
-            'stok_kamar' => 'sometimes|required|integer',
-            'deskripsi_kamar' => 'sometimes|required|string',
-        ]);
-        $kamar->update($request->only([
-            'nama_kamar',
-            'harga',
-            'stok_kamar',
-            'deskripsi_kamar',
-        ]));
-        return response()->json([
-            'status' => true,
-            'message' => 'Kamar berhasil diperbarui.',
-            'data' => $kamar
-        ]);
-    }
-    
     // DELETE DATA KAMAR
     public function destroy(Request $request, $id)
     {

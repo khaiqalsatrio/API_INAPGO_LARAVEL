@@ -6,22 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Hotel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreHotelRequest;
 
 class HotelController extends Controller
 {
-    public function store(Request $request)
+    public function store(StoreHotelRequest $request)
     {
-        $request->validate([
-            'nama_hotel' => 'required|string',
-            'deskripsi_hotel' => 'required|string',
-            'latitude' => 'nullable|numeric',
-            'longitude' => 'nullable|numeric',
-            'alamat' => 'required|string',
-            'kota' => 'required|string',
-        ]);
         $user = $request->get('auth_user');
         $id_user = $user->id;
-        // Cek duplikasi
         $exists = Hotel::where('id_user', $id_user)
             ->where('alamat', $request->alamat)
             ->exists();
@@ -59,7 +51,6 @@ class HotelController extends Controller
         ]);
     }
 
-
     public function getAll()
     {
         $hotels = Hotel::all();
@@ -81,7 +72,6 @@ class HotelController extends Controller
                 : 'Admin belum mendaftarkan hotel.',
         ]);
     }
-
 
     // SEARCH BY ALAMAT
     public function searchByAlamat(Request $request)

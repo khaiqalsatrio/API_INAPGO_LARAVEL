@@ -3,22 +3,19 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB; // ✅ <-- Tambahkan ini
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use App\Models\User;
 
-
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
         $user = User::where('email', $request->email)->first();
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
@@ -46,17 +43,10 @@ class AuthController extends Controller
         ]);
     }
 
-
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
-        ]);
         $role = $request->input('role', 'customer');
         if ($role === 'admin') {
-            // Hanya izinkan jika secret benar
             $adminSecret = $request->input('admin_secret');
             if ($adminSecret !== 'super123') {
                 return response()->json([
@@ -90,10 +80,9 @@ class AuthController extends Controller
         }
     }
 
-
     public function profile(Request $request)
     {
-        $user = $request->get('auth_user'); 
+        $user = $request->get('auth_user');
         return response()->json([
             'status' => true,
             'message' => 'Data user berhasil diambil.',
