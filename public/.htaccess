@@ -5,6 +5,11 @@
 
     RewriteEngine On
 
+    # 👉 Tambahkan ini
+    # Allow access to /storage folder
+    RewriteCond %{REQUEST_URI} ^/storage/
+    RewriteRule ^ - [L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

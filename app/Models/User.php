@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -17,7 +16,9 @@ class User extends Authenticatable
         'password',
         'role',
         'token',
-        'token_expired_at'
+        'token_expired_at',
+        'profile_image_blob', 
+        'profile_image_mime', 
     ];
 
     protected $hidden = [
@@ -33,4 +34,3 @@ class User extends Authenticatable
         ];
     }
 }
-

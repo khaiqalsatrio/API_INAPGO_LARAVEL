@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,11 +12,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // Pastikan UserFactory Anda juga menggunakan 'nama'
         User::factory()->create([
-            'name' => 'Test User',
+            'nama' => 'Test User', // <-- UBAH DARI 'name' MENJADI 'nama'
             'email' => 'test@example.com',
+            // Tambahkan juga 'role' jika Anda memiliki kolom 'role' di tabel users
+            // dan ingin mengatur role default untuk user yang dibuat seeder.
+            'role' => 'customer', // Contoh: tambahkan ini jika ada kolom 'role'
         ]);
+
+        // Jika Anda juga mengaktifkan User::factory(10)->create();
+        // Pastikan UserFactory Anda di database/factories/UserFactory.php
+        // juga sudah diperbaiki untuk menggunakan 'nama'
     }
 }

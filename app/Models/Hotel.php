@@ -15,7 +15,9 @@ class Hotel extends Model
         'latitude',
         'longitude',
         'alamat',
-        'kota', 
+        'kota',
+        'hotel_image_blob', 
+        'hotel_image_mime', 
     ];
 
     public $timestamps = true;
