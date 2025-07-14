@@ -7,6 +7,6 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## LINK PROJECT INAP-GO
+## LINK PROJECT APP INAP-GO
 
 https://github.com/khaiqalsatrio/project_PamLanjut_115.git
